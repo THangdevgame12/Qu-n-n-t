@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quán net simulator</title>
+    <style>
+        body {
+            text-align: center;
+            background-size: cover;
+            margin: 0;
+            overflow: hidden;
+        }
+        .plus-button {
+            width: 25px;
+            height: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid black;
+            background-color: white;
+            cursor: pointer;
+            position: absolute;
+        }
+        
+        #btn1 { top: 400px; left: 200px; }
+        #btn2 { top: 400px; left: 400px; }
+        #btn3 { top: 400px; left: 600px; }
+        #btn4 { top: 400px; left: 800px; }
+        #btn5 { top: 400px; left: 1000px; }
+        #btn6 { top: 400px; left: 1200px; }
+        #btn7 { top: 600px; left: 200px; }
+        #btn8 { top: 600px; left: 400px; }
+        #btn9 { top: 600px; left: 600px; }
+        #btn10 { top: 600px; left: 800px; }
+        #btn11 { top: 600px; left: 1000px; }
+        #btn12 { top: 600px; left: 1200px; }
+        #btn13 { top: 800px; left: 200px; }
+        #btn14 { top: 800px; left: 400px; }
+        #btn15 { top: 800px; left: 800px; }
+        #btn16 { top: 800px; left: 1000px; }
+        #btn17 { top: 800px; left: 1200px; }
+        .emoji {
+            font-size: 64px;
+            position: absolute;
+        }
+        
+        .money-display {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            background: white;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+
+        .selection-menu {
+            position: absolute;
+            background: white;
+            border: 2px solid black;
+            padding: 10px;
+            display: none;
+        }
+        .selection-menu button {
+            display: block;
+            margin: 5px 0;
+            font-size: 16px;
+            padding: 5px;
+        }
+        
+        .reset-button {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            background: red;
+            color: white;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quán net simulator</h1>
+    
+    <div class="money-display" id="moneyDisplay">Tiền💵: 5000000</div>
+    <button class="reset-button" onclick="resetGame()">Reset</button>
+    
+    <button class="plus-button" id="btn1" onclick="showMenu(1)">+</button>
+    <button class="plus-button" id="btn2" onclick="showMenu(2)">+</button>
+    <button class="plus-button" id="btn3" onclick="showMenu(3)">+</button>
+    <button class="plus-button" id="btn4" onclick="showMenu(4)">+</button>
+    <button class="plus-button" id="btn5" onclick="showMenu(5)">+</button>
+    <button class="plus-button" id="btn6" onclick="showMenu(6)">+</button>
+    <button class="plus-button" id="btn7" onclick="showMenu(7)">+</button>
+    <button class="plus-button" id="btn8" onclick="showMenu(8)">+</button>
+    <button class="plus-button" id="btn9" onclick="showMenu(9)">+</button>
+    <button class="plus-button" id="btn10" onclick="showMenu(10)">+</button>
+    <button class="plus-button" id="btn11" onclick="showMenu(11)">+</button>
+    <button class="plus-button" id="btn12" onclick="showMenu(12)">+</button>
+    <button class="plus-button" id="btn13" onclick="showMenu(13)">+</button>
+    <button class="plus-button" id="btn14" onclick="showMenu(14)">+</button>
+    <button class="plus-button" id="btn15" onclick="showMenu(15)">+</button>
+    <button class="plus-button" id="btn16" onclick="showMenu(16)">+</button>
+    <button class="plus-button" id="btn17" onclick="showMenu(17)">+</button>
+
+    <div class="selection-menu" id="selectionMenu">
+        <button onclick="buyPC('office')">PC Văn Phòng ️ (2 triệu)</button>
+        <button onclick="buyPC('gaming')">PC Gaming ️ (8 triệu)</button>
+    </div>
+    
+    <script>
+        let currentButtonId = null;
+        const emojiOptions = ['🖥️😂', '🖥️😊', '🖥️🤨'];
+        let money = parseInt(localStorage.getItem("money")) || 5000000;
+        document.getElementById("moneyDisplay").innerText = `Tiền: ${money}`;
+
+        // Khôi phục trạng thái game từ localStorage
+        let gameState = JSON.parse(localStorage.getItem("gameState")) || {};
+        for (let buttonId in gameState) {
+            if (gameState[buttonId].emoji) {
+                placeEmoji(gameState[buttonId].emoji, buttonId, false);
+            }
+        }
+
+        function showMenu(id) {
+            currentButtonId = id;
+            const button = document.getElementById(`btn${id}`);
+            const menu = document.getElementById("selectionMenu");
+            menu.style.top = `${button.offsetTop + 30}px`;
+            menu.style.left = `${button.offsetLeft}px`;
+            menu.style.display = "block";
+        }
+
+        function buyPC(type) {
+            if (!currentButtonId) return;
+            let cost = type === 'office' ? 2000000 : 8000000;
+            let emojiType = type === 'office' ? '🖥️' : '🖥️';
+
+            if (money >= cost) {
+                money -= cost;
+                document.getElementById("moneyDisplay").innerText = `Tiền: ${money}`;
+                localStorage.setItem("money", money);
+                placeEmoji(emojiType, currentButtonId, true);
+            } else {
+                alert("Không đủ tiền!");
+            }
+        }
+
+        function placeEmoji(emojiType, buttonId, isNewPurchase) {
+            const button = document.getElementById(`btn${buttonId}`);
+            const emoji = document.createElement("div");
+            emoji.className = "emoji";
+            emoji.innerHTML = emojiType;
+            
+            const buttonSize = 50;
+            const topPosition = button.offsetTop + (buttonSize / 2) - 32;
+            const leftPosition = button.offsetLeft + (buttonSize / 2) - 32;
+            
+            emoji.style.top = `${topPosition}px`;
+            emoji.style.left = `${leftPosition}px`;
+            
+            document.body.appendChild(emoji);
+            button.style.display = "none";
+            document.getElementById("selectionMenu").style.display = "none";
+            
+            if (isNewPurchase) {
+                gameState[buttonId] = { emoji: emojiType };
+                localStorage.setItem("gameState", JSON.stringify(gameState));
+            }
+
+            setInterval(() => {
+                let newEmoji = emojiOptions[Math.floor(Math.random() * emojiOptions.length)];
+                emoji.innerHTML = newEmoji;
+                money += 5000;
+                document.getElementById("moneyDisplay").innerText = `Tiền: ${money}`;
+                localStorage.setItem("money", money);
+            }, 5000);
+        }
+
+        function resetGame() {
+            localStorage.removeItem("money");
+            localStorage.removeItem("gameState");
+            location.reload();
+        }
+    </script>
+</body>
+</html>
