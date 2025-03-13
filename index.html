@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +9,8 @@
             text-align: center;
             background-size: cover;
             margin: 0;
-            min-height: 100vh;
-            overflow-y: auto;
+            overflow: hidden;
         }
-
         .plus-button {
             width: 25px;
             height: 25px;
@@ -24,7 +21,7 @@
             cursor: pointer;
             position: absolute;
         }
-
+        
         #btn1 { top: 400px; left: 200px; }
         #btn2 { top: 400px; left: 400px; }
         #btn3 { top: 400px; left: 600px; }
@@ -42,12 +39,11 @@
         #btn15 { top: 800px; left: 800px; }
         #btn16 { top: 800px; left: 1000px; }
         #btn17 { top: 800px; left: 1200px; }
-
         .emoji {
             font-size: 64px;
             position: absolute;
         }
-
+        
         .money-display {
             position: absolute;
             top: 50px;
@@ -66,15 +62,15 @@
             border: 2px solid black;
             padding: 10px;
             display: none;
+            
         }
-
         .selection-menu button {
             display: block;
             margin: 5px 0;
             font-size: 16px;
             padding: 5px;
         }
-
+        
         .reset-button {
             position: absolute;
             top: 50px;
@@ -90,13 +86,13 @@
         }
     </style>
 </head>
-
 <body>
     <h1>Quán net simulator</h1>
-
+    
     <div class="money-display" id="moneyDisplay">Tiền💵: 5000000</div>
     <button class="reset-button" onclick="resetGame()">Reset</button>
 
+    
     <button class="plus-button" id="btn1" onclick="showMenu(1)">+</button>
     <button class="plus-button" id="btn2" onclick="showMenu(2)">+</button>
     <button class="plus-button" id="btn3" onclick="showMenu(3)">+</button>
@@ -118,16 +114,30 @@
     <div class="selection-menu" id="selectionMenu">
         <button onclick="buyPC('office')">PC Văn Phòng ️ (2 triệu)</button>
         <button onclick="buyPC('gaming')">PC Gaming ️ (8 triệu)</button>
-    </div>
+        <button onclick="myFunction()">❌</button>
 
+        <script>
+            function myFunction() {
+                var x = document.getElementById("selectionMenu")
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+            }
+        }
+    
+        </script>
+    
+    </div>
+    
     <script>
         let currentButtonId = null;
         const emojiOptions = ['🖥️😂', '🖥️😊', '🖥️🤨'];
         let money = parseInt(localStorage.getItem("money")) || 5000000;
         document.getElementById("moneyDisplay").innerText = `Tiền: ${money}`;
 
+        // Khôi phục trạng thái game từ localStorage
         let gameState = JSON.parse(localStorage.getItem("gameState")) || {};
-
         for (let buttonId in gameState) {
             if (gameState[buttonId].emoji) {
                 placeEmoji(gameState[buttonId].emoji, buttonId, false);
@@ -163,18 +173,18 @@
             const emoji = document.createElement("div");
             emoji.className = "emoji";
             emoji.innerHTML = emojiType;
-
+            
             const buttonSize = 50;
             const topPosition = button.offsetTop + (buttonSize / 2) - 32;
             const leftPosition = button.offsetLeft + (buttonSize / 2) - 32;
-
+            
             emoji.style.top = `${topPosition}px`;
             emoji.style.left = `${leftPosition}px`;
-
+            
             document.body.appendChild(emoji);
             button.style.display = "none";
             document.getElementById("selectionMenu").style.display = "none";
-
+            
             if (isNewPurchase) {
                 gameState[buttonId] = { emoji: emojiType };
                 localStorage.setItem("gameState", JSON.stringify(gameState));
